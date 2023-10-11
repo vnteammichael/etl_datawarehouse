@@ -1,0 +1,29 @@
+# """Load config from environment variables."""
+from os import environ
+
+# Database config
+MYSQL_HOST = environ.get('ETL_MYSQL_HOST')
+MYSQL_USERNAME = environ.get('ETL_MYSQL_USERNAME')
+MYSQL_PASSWORD = environ.get('ETL_MYSQL_PASSWORD')
+MYSQL_PORT = environ.get('ETL_MYSQL_PORT')
+MYSQL_NAME = environ.get('ETL_MYSQL_NAME')
+
+LUCKY_WHEEL_8B_HOST = environ.get('LUCKY_WHEEL_8B_HOST')
+LUCKY_WHEEL_8B_USERNAME = environ.get('LUCKY_WHEEL_8B_USERNAME')
+LUCKY_WHEEL_8B_PASSWORD = environ.get('LUCKY_WHEEL_8B_PASSWORD')
+LUCKY_WHEEL_8B_PORT = environ.get('LUCKY_WHEEL_8B_PORT')
+LUCKY_WHEEL_8B_NAME = environ.get('LUCKY_WHEEL_8B_NAME')
+
+
+# LUCKY_WHEEL_8D_HOST = environ.get('LUCKY_WHEEL_8D_HOST')
+# LUCKY_WHEEL_8D_USERNAME = environ.get('LUCKY_WHEEL_8D_USERNAME')
+# LUCKY_WHEEL_8D_PASSWORD = environ.get('LUCKY_WHEEL_8D_PASSWORD')
+# LUCKY_WHEEL_8D_PORT = environ.get('LUCKY_WHEEL_8D_PORT')
+# LUCKY_WHEEL_8D_NAME = environ.get('LUCKY_WHEEL_8D_NAME')
+
+
+DTC_8B_API_URL = environ.get('DTC_8B_API_URL')
+SIGN_KEY_DTC_8B = environ.get('SIGN_KEY_DTC_8B')
+DTC_8D_API_URL = environ.get('DTC_8D_API_URL')
+SIGN_KEY_DTC_8D = environ.get('SIGN_KEY_DTC_8D')
+
