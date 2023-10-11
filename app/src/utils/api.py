@@ -17,7 +17,7 @@ def create_sign_str(user_name,start,end,type,key):
     return res.hexdigest()
 
 def call_api(url,data):
-    url = "https://release.888b.com/member/r/userCe"
+    # url = "https://release.888b.com/member/r/userCe"
     payload = json.dumps(data)
     headers = {
     'Content-Type': 'application/json'
@@ -29,7 +29,9 @@ def call_api(url,data):
     if data_res['code'] == 0:
         return data_res['data']['totalRechargeAmount'] , data_res['data']['totalValidBetAmount']
     else:
+        # data_res["aa"] = data
         LOGGER.error(data_res)
+        LOGGER.error(data)
         return None,None
     
 def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
