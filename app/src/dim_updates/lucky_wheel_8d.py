@@ -172,7 +172,7 @@ def run(get_date, db, logs):
     
 
     if len(stats_user.values)>0:
-        dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, redeem_amount) VALUES"
+        dim_user_history_table_insert = "INSERT INTO user_history (date_id, user_id, game_id, redeem_amount) VALUES"
         total_inserted += db.load_data_bulk(part_query=dim_user_history_table_insert,
                                         format_str='(%s, %s, %s, %s)',
                                         dataframe=stats_user,
