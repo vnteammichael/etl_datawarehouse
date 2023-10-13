@@ -12,7 +12,7 @@ class MySQLConnector:
     """Mysql Database class"""
 
     
-    def __init__(self, host, port, user, password, database, charset = "utf8mb3"):
+    def __init__(self, host, port, user, password, database, charset = "utf8mb4"):
         self.host = host
         self.port = port
         self.user = user

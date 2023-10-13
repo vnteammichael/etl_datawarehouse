@@ -47,7 +47,6 @@ def run(get_date, db, logs):
     if len(df)==0:
         return logs
 
-    df = df.applymap(lambda x: x.encode('utf-8').decode('utf-8'))
     
     df["department_id"] = df['department'].apply(lambda x : db.load_department(x)) 
     df = df[["user_name","department_id"]]
