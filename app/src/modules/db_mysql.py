@@ -12,13 +12,12 @@ class MySQLConnector:
     """Mysql Database class"""
 
     
-    def __init__(self, host, port, user, password, database, charset = "utf8mb4"):
+    def __init__(self, host, port, user, password, database):
         self.host = host
         self.port = port
         self.user = user
         self.password = password
         self.database = database
-        self.charset = charset
         self.conn = None
         self.cache = {}
 
@@ -30,8 +29,7 @@ class MySQLConnector:
                     port=self.port,
                     user=self.user,
                     password=self.password,
-                    database=self.database,
-                    charset=self.charset
+                    database=self.database
                 )
             except Exception as e:
                 LOGGER.error(e)
