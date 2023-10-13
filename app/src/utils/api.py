@@ -12,7 +12,7 @@ def create_sign_str(user_name,start,end,type,key):
     # start = ''.join(start.split('-'))
     # end = ''.join(end.split('-'))
     input_str = f"{user_name}|{start}|{end}|{type}|{key}"
-    
+
     res = hashlib.md5(input_str.encode())
 
     return res.hexdigest()
@@ -31,6 +31,7 @@ def call_api(url,data):
     else:
         # data_res["aa"] = data
         LOGGER.error(data_res)
+        LOGGER.error(data)
         return None,None
     
 def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
