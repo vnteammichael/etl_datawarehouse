@@ -64,7 +64,7 @@ def run(get_date, db, logs):
 
     #Get hisory data play
     query = ("""
-                with users as (select id, username from users where date(updatedAt)  = '{date}'),
+                with users as (select id, username from users),
                     history_daily as (select userId, money
                                     from collections
                                     where date(createdAt)  = '{date}' and isDeleted = 0 and typeName = 'received')
@@ -90,8 +90,6 @@ def run(get_date, db, logs):
         "times":"count"
     }).reset_index()
 
-    print(df.count())
-    print(stats_user.count())
 
     stats_user.rename(columns={"id": "user_id", "value": "scores"},inplace=True)
     stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
@@ -120,8 +118,7 @@ def run(get_date, db, logs):
     
     stats_user.rename(columns={"id": "user_id"},inplace=True)
     stats_user = stats_user[["date_id","user_id","game_id","valid_bet_amount","recharge_amount","times","scores"]]
-    print(dim_user.count())
-    print(stats_user.count())
+
 
     if len(stats_user.values)>0:
         # records_data = df.to_records(index=False)

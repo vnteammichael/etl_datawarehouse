@@ -264,6 +264,40 @@ class MySQLConnector:
                 cur.close()
                 return f"{cur.rowcount}"
             return 0
+        
+    def clear_user_history(self, date, game):
+        """Clear fact_daily_measure at warehouse"""
+        
+        self.connect()
+         
+        date_id = -1
+        game_id = -1
+        
+        query_get_date_id = ("""
+            SELECT id FROM dim_date WHERE full_date=%s LIMIT 1;
+        """)
+
+        query_get_game_id = ("""
+            SELECT id FROM dim_game WHERE game=%s LIMIT 1;
+        """)
+        with self.conn.cursor() as cur:
+            cur.execute(query_get_date_id, (date,))
+            row = cur.fetchone()
+            if row:
+                date_id = row[0]
+            cur.execute(query_get_game_id, (game,))
+            row = cur.fetchone()
+            if row:
+                game_id = row[0]
+                print(game_id)
+
+
+            query = "DELETE FROM user_history WHERE date_id = " + str(date_id) + " AND game_id = " + str(game_id)
+            cur.execute(query)
+            self.conn.commit()
+            cur.close()
+            return f"{cur.rowcount}"
+        
             
     def clear_fact_churn_measure(self, date_id, churn_type):
         """Clear fact_churn_measure at warehouse"""
