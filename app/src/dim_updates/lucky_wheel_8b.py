@@ -20,8 +20,8 @@ def run(get_date, db, logs):
 
     # Insert results to Data warehouse
     action_dict = {
-        "name": "users_info", # Required
-        "description": "DIM - update info", # Required
+        "name": "lucky wheel 8b", # Required
+        "description": "DIM - update lucky wheel 8b", # Required
     }
     # Validate duplicate action name
     if action_dict["name"] in logs["actions"]:
@@ -33,7 +33,7 @@ def run(get_date, db, logs):
     db_8b = MySQLConnector(host=LUCKY_WHEEL_8B_HOST, user=LUCKY_WHEEL_8B_USERNAME, password=LUCKY_WHEEL_8B_PASSWORD, port=LUCKY_WHEEL_8B_PORT, database=LUCKY_WHEEL_8B_NAME)
     query = ("""
 
-        SELECT username, '{department}' AS department FROM {table} WHERE date(updatedAt) = '{date}';
+        SELECT username, '{department}' AS department FROM {table};
 
     """.format(department='8b',table="users", date=get_date))
 
@@ -118,6 +118,8 @@ def run(get_date, db, logs):
     stats_user.rename(columns={"id": "user_id"},inplace=True)
     stats_user = stats_user[["date_id","user_id","game_id","valid_bet_amount","recharge_amount","times","scores"]]
 
+    print(df['user_id'].count())
+    print(stats_user['user_id'].count())
 
     if len(stats_user.values)>0:
         dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, valid_bet_amount, recharge_amount, times, scores) VALUES"

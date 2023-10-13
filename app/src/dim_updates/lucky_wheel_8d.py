@@ -13,15 +13,15 @@ from src.modules.db_mysql import MySQLConnector
 
 
 def run(get_date, db, logs):
-    """Update DIM: users_info"""
+    """Update DIM: lucky wheel 8d"""
     startTime = currentMillisecondsTime()
     total_updated = 0
     total_inserted = 0
 
     # Insert results to Data warehouse
     action_dict = {
-        "name": "users_info", # Required
-        "description": "DIM - update info", # Required
+        "name": "lucky wheel 8d", # Required
+        "description": "DIM - lucky wheel 8d ", # Required
     }
     # Validate duplicate action name
     if action_dict["name"] in logs["actions"]:
@@ -33,7 +33,7 @@ def run(get_date, db, logs):
     db_8d = MySQLConnector(host=LUCKY_WHEEL_8D_HOST, user=LUCKY_WHEEL_8D_USERNAME, password=LUCKY_WHEEL_8D_PASSWORD, port=LUCKY_WHEEL_8D_PORT, database=LUCKY_WHEEL_8D_NAME)
     query = ("""
 
-        SELECT username, '{department}' AS department FROM {table} WHERE date(updatedAt) = '{date}';
+        SELECT username, '{department}' AS department FROM {table};
 
     """.format(department='8d',table="users", date=get_date))
 
