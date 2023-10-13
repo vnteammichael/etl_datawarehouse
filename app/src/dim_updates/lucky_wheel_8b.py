@@ -89,7 +89,6 @@ def run(get_date, db, logs):
         "value":"sum",
         "times":"count"
     }).reset_index()
-    test()
 
     stats_user.rename(columns={"id": "user_id", "value": "scores"},inplace=True)
     stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
@@ -135,24 +134,3 @@ def run(get_date, db, logs):
     logs["actions"].append(action_dict["name"])
     logs["execute_time"].append(spend_time)
     return logs
-
-def test():
-    import requests
-    import json
-
-    url = "https://api.888b01.com/member/r/userCe"
-
-    payload = json.dumps({
-    "userName": "cavang151212",
-    "startTime": "20231010",
-    "endTime": "20231010",
-    "gameType": 5,
-    "sign": "58b9a0a03ba9a8fe6c49ec6b582c569f"
-    })
-    headers = {
-    'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    print(response.text)
