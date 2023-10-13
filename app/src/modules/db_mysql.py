@@ -98,13 +98,13 @@ class MySQLConnector:
             if cur:
                 cur.close()
 
-    def load_data_bulk(self, part_query, format_str, dataframe):
+    def load_data_bulk(self, part_query, format_str, dataframe, on_conflict):
         """Load data to warehouse"""
         self.connect()
         with self.conn.cursor() as cur:
             data = dataframe.values.tolist()
             # Define the INSERT query
-            insert_query = f"{part_query} {format_str} "
+            insert_query = f"{part_query} {format_str} {on_conflict}"
 
 
             # Execute the INSERT query with executemany

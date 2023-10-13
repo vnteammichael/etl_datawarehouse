@@ -59,7 +59,8 @@ def run(get_date, db, logs):
         dim_user_table_insert = "INSERT IGNORE INTO dim_user (user_name,department_id) VALUES"
         total_inserted = db.load_data_bulk(part_query=dim_user_table_insert,
                                         format_str='(%s, %s)',
-                                        dataframe=df)
+                                        dataframe=df,
+                                        on_conflict = "")
 
 
     #Get hisory data play
@@ -126,7 +127,55 @@ def run(get_date, db, logs):
         dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, valid_bet_amount, recharge_amount, times, scores) VALUES"
         total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
                                         format_str='(%s, %s, %s, %s, %s, %s, %s)',
-                                        dataframe=stats_user)
+                                        dataframe=stats_user,
+                                        on_conflict = "")
+        
+    query = ("""
+                with users as (select id, username from users ),
+                    history_daily as (select userId, money
+                                    from collections
+                                    where date(createdAt)  = '{date}' and isDeleted = 0 and typeName = 'redeem')
+                SELECT id, username, '{game}' AS game, money
+                FROM history_daily
+                        INNER JOIN users ON history_daily.userId = users.id;
+
+
+    """.format(game='lucky_wheel', date=get_date))
+
+    try:
+        records = db_8b.select_rows(query)
+        df = pd.DataFrame(records, columns =['id','user_name','game','value'])
+    except Exception as e:
+        print(str(e))
+    # Stop this task
+    if len(df)==0:
+        return logs
+    
+    df["times"] = df['user_name'].apply(lambda x:x)
+    stats_user = df.groupby(['id','user_name','game']).agg({
+        "value":"sum"
+    }).reset_index()
+
+    stats_user.rename(columns={"id": "user_id", "value": "redeem_amount"},inplace=True)
+    stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
+    stats_user["date"] = get_date
+    stats_user["date_id"] = stats_user['date'].apply(lambda x: db.load_date(x))
+    stats_user = stats_user[["date_id","user_name","game_id","redeem_amount"]]
+
+
+    stats_user = stats_user.merge(dim_user,how="inner",on="user_name")
+    
+    stats_user.rename(columns={"id": "user_id"},inplace=True)
+    stats_user = stats_user[["date_id","user_id","game_id","redeem_amount"]]
+
+    
+
+    if len(stats_user.values)>0:
+        dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, redeem_amount) VALUES"
+        total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
+                                        format_str='(%s, %s, %s, %s)',
+                                        dataframe=stats_user,
+                                        on_conflict = "ON DUPLICATE KEY UPDATE redeem_amount=redeem_amount")
  
     # Show info logs
     spend_time = currentMillisecondsTime() - startTime
