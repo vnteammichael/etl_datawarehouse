@@ -47,6 +47,7 @@ def run(get_date, db, logs):
     if len(df)==0:
         return logs
 
+    db.connect()
     
     df["department_id"] = df['department'].apply(lambda x : db.load_department(x)) 
     df = df[["user_name","department_id"]]
