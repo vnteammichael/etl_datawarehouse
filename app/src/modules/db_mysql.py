@@ -245,26 +245,6 @@ class MySQLConnector:
         except(Exception, mysql.connector.Error) as error:
             print(error)
 
-    # def clear_fact_snapshot(self, date_id):
-    #     """Clear fact_snapshot at warehouse"""
-
-    #     query = "DELETE FROM fact_snapshot WHERE date_id = " + str(date_id);
-    #     self.connect()
-    #     with self.conn.cursor() as cur:
-    #         cur.execute(query)
-    #         self.conn.commit()
-    #         cur.close()
-    #         return f"{cur.rowcount}"
-    # def clear_fact_daily_measure(self, date_id):
-    #     """Clear fact_daily_measure at warehouse"""
-
-    #     query = "DELETE FROM fact_daily_measure WHERE date_id = " + str(date_id);
-    #     self.connect()
-    #     with self.conn.cursor() as cur:
-    #         cur.execute(query)
-    #         self.conn.commit()
-    #         cur.close()
-    #         return f"{cur.rowcount}"
     def clear_fact_daily(self, date_id, table_name):
         """Clear fact_daily_measure at warehouse"""
 
@@ -322,15 +302,15 @@ class MySQLConnector:
         query = ("""
             SELECT id FROM dim_metric WHERE metric_name=%s LIMIT 1;
         """)
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self.conn.cursor() as cur:
             cur.execute(query, (metric_name,))
             row = cur.fetchone()
             if row:
-                id = row["id"]
-                cur.execute(dim_metric_table_update_description, (log_name, description, metric_value, metric_value_2, dimension_1, dimension_2, dimension_3, id, ))
+                id = row[0]
+                cur.execute(dim_metric_table_update_description, (description, metric_value, metric_value_2, dimension_1, dimension_2, dimension_3, id, ))
                 self.conn.commit()
             else:
-                cur.execute(dim_metric_table_insert, (metric_name, log_name, description, metric_value, metric_value_2, dimension_1, dimension_2, dimension_3, ))
+                cur.execute(dim_metric_table_insert, (metric_name, description, metric_value, metric_value_2, dimension_1, dimension_2, dimension_3, ))
                 self.conn.commit()
                 id = cur.fetchone()[0]
         cur.close()
