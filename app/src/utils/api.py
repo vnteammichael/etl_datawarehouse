@@ -73,9 +73,10 @@ def test(url,data):
     import requests
     import json
 
-    # url = "https://api.888b01.com/member/r/userCe"
+    url = "https://api.888b01.com/member/r/userCe"
 
     payload = json.dumps(data)
+    print(payload)
     headers = {
     'Content-Type': 'application/json'
     }
