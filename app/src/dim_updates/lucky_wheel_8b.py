@@ -89,44 +89,42 @@ def run(get_date, db, logs):
         "value":"sum",
         "times":"count"
     }).reset_index()
-    print(df.count())
-    print(stats_user.count())
 
-    # stats_user.rename(columns={"id": "user_id", "value": "scores"},inplace=True)
-    # stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
+    stats_user.rename(columns={"id": "user_id", "value": "scores"},inplace=True)
+    stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
     
-    # stats_user["temp"] = stats_user["user_name"].apply(lambda x: get_valid_bet_amount(x,get_date,get_date,DTC_8B_API_URL,SIGN_KEY_DTC_8B))
-    # stats_user = stats_user[stats_user["temp"].str.len() == 2]
-    # stats_user["recharge_amount"] = stats_user["temp"].apply(lambda x: x[0])
-    # stats_user["valid_bet_amount"] = stats_user["temp"].apply(lambda x: x[1])
-    # stats_user["date"] = get_date
+    stats_user["temp"] = stats_user["user_name"].apply(lambda x: get_valid_bet_amount(x,get_date,get_date,DTC_8B_API_URL,SIGN_KEY_DTC_8B))
+    stats_user = stats_user[stats_user["temp"].str.len() == 2]
+    stats_user["recharge_amount"] = stats_user["temp"].apply(lambda x: x[0])
+    stats_user["valid_bet_amount"] = stats_user["temp"].apply(lambda x: x[1])
+    stats_user["date"] = get_date
 
-    # stats_user["date_id"] = stats_user['date'].apply(lambda x: db.load_date(x))
+    stats_user["date_id"] = stats_user['date'].apply(lambda x: db.load_date(x))
     
-    # stats_user = stats_user[["date_id","user_name","game_id","valid_bet_amount","recharge_amount","times","scores"]]
+    stats_user = stats_user[["date_id","user_name","game_id","valid_bet_amount","recharge_amount","times","scores"]]
     
-    # query = """
-    #     SELECT id, user_name FROM dim_user;
-    # """
+    query = """
+        SELECT id, user_name FROM dim_user;
+    """
 
-    # try:
-    #     records = db.select_rows(query)
-    #     dim_user = pd.DataFrame(records, columns =['id','user_name'])
-    # except Exception as e:
-    #     print(str(e))
+    try:
+        records = db.select_rows(query)
+        dim_user = pd.DataFrame(records, columns =['id','user_name'])
+    except Exception as e:
+        print(str(e))
 
-    # stats_user = stats_user.merge(dim_user,how="inner",on="user_name")
+    stats_user = stats_user.merge(dim_user,how="inner",on="user_name")
     
-    # stats_user.rename(columns={"id": "user_id"},inplace=True)
-    # stats_user = stats_user[["date_id","user_id","game_id","valid_bet_amount","recharge_amount","times","scores"]]
+    stats_user.rename(columns={"id": "user_id"},inplace=True)
+    stats_user = stats_user[["date_id","user_id","game_id","valid_bet_amount","recharge_amount","times","scores"]]
 
     
 
-    # if len(stats_user.values)>0:
-    #     dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, valid_bet_amount, recharge_amount, times, scores) VALUES"
-    #     total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
-    #                                     format_str='(%s, %s, %s, %s, %s, %s, %s)',
-    #                                     dataframe=stats_user)
+    if len(stats_user.values)>0:
+        dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, valid_bet_amount, recharge_amount, times, scores) VALUES"
+        total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
+                                        format_str='(%s, %s, %s, %s, %s, %s, %s)',
+                                        dataframe=stats_user)
  
     # Show info logs
     spend_time = currentMillisecondsTime() - startTime
