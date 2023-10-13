@@ -12,7 +12,7 @@ def create_sign_str(user_name,start,end,type,key):
     # start = ''.join(start.split('-'))
     # end = ''.join(end.split('-'))
     input_str = f"{user_name}|{start}|{end}|{type}|{key}"
-    print(input_str)
+    
     res = hashlib.md5(input_str.encode())
 
     return res.hexdigest()

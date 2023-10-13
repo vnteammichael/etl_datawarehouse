@@ -70,7 +70,7 @@ def run(get_date, db, logs):
                                     where date(createdAt)  = '{date}' and isDeleted = 0 and typeName = 'received')
                 SELECT id, username, '{game}' AS game, money
                 FROM history_daily
-                        INNER JOIN users ON users.id = history_daily.userId LIMIT 1;
+                        INNER JOIN users ON users.id = history_daily.userId;
 
 
     """.format(game='lucky_wheel', date=get_date))
