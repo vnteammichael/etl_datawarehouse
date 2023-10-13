@@ -29,7 +29,8 @@ class MySQLConnector:
                     port=self.port,
                     user=self.user,
                     password=self.password,
-                    database=self.database
+                    database=self.database,
+                    charset="utf8mb3"
                 )
             except Exception as e:
                 LOGGER.error(e)
@@ -520,7 +521,6 @@ class MySQLConnector:
         with self.conn.cursor() as cur:
             cur.execute(query, (department_name,))
             row = cur.fetchone()
-            print(row)
             if row:
                 id = row[0]
             else:
