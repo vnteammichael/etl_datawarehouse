@@ -30,7 +30,7 @@ def run(get_date, db, logs):
 
     #### 1 - Query data ####
     
-    db_8b = MySQLConnector(host=LUCKY_WHEEL_8D_HOST, user=LUCKY_WHEEL_8D_USERNAME, password=LUCKY_WHEEL_8D_PASSWORD, port=LUCKY_WHEEL_8D_PORT, database=LUCKY_WHEEL_8D_NAME)
+    db_8d = MySQLConnector(host=LUCKY_WHEEL_8D_HOST, user=LUCKY_WHEEL_8D_USERNAME, password=LUCKY_WHEEL_8D_PASSWORD, port=LUCKY_WHEEL_8D_PORT, database=LUCKY_WHEEL_8D_NAME)
     query = ("""
 
         SELECT username, '{department}' AS department FROM {table} WHERE date(updatedAt) = '{date}';
@@ -39,7 +39,7 @@ def run(get_date, db, logs):
 
     df = None
     try:
-        records = db_8b.select_rows(query)
+        records = db_8d.select_rows(query)
         df = pd.DataFrame(records, columns =['user_name','department'])
     except Exception as e:
         print(str(e))
@@ -76,7 +76,7 @@ def run(get_date, db, logs):
     """.format(game='lucky_wheel', date=get_date))
 
     try:
-        records = db_8b.select_rows(query)
+        records = db_8d.select_rows(query)
         df = pd.DataFrame(records, columns =['id','user_name','game','value'])
     except Exception as e:
         print(str(e))

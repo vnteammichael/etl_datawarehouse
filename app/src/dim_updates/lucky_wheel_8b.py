@@ -64,13 +64,13 @@ def run(get_date, db, logs):
 
     #Get hisory data play
     query = ("""
-                with users as (select id, username from users where date(updatedAt)  = '{date}'),
+                with users as (select id, username from users ),
                     history_daily as (select userId, money
                                     from collections
                                     where date(createdAt)  = '{date}' and isDeleted = 0 and typeName = 'received')
                 SELECT id, username, '{game}' AS game, money
                 FROM history_daily
-                        INNER JOIN users ON users.id = history_daily.userId;
+                        INNER JOIN users ON history_daily.userId = users.id;
 
 
     """.format(game='lucky_wheel', date=get_date))
@@ -120,7 +120,6 @@ def run(get_date, db, logs):
 
 
     if len(stats_user.values)>0:
-        # records_data = df.to_records(index=False)
         dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, valid_bet_amount, recharge_amount, times, scores) VALUES"
         total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
                                         format_str='(%s, %s, %s, %s, %s, %s, %s)',

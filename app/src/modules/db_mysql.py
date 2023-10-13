@@ -245,16 +245,26 @@ class MySQLConnector:
         except(Exception, mysql.connector.Error) as error:
             print(error)
 
-    def clear_fact_daily(self, date_id, table_name):
+    def clear_fact_daily(self, date, table_name):
         """Clear fact_daily_measure at warehouse"""
-
-        query = "DELETE FROM " + table_name + " WHERE date_id = " + str(date_id);
+        
         self.connect()
+        
+        query_get_date_id = ("""
+            SELECT id FROM dim_date WHERE full_date=%s LIMIT 1;
+        """)
         with self.conn.cursor() as cur:
-            cur.execute(query)
-            self.conn.commit()
-            cur.close()
-            return f"{cur.rowcount}"
+            cur.execute(query_get_date_id, (date,))
+            row = cur.fetchone()
+            if row:
+                id = row[0]
+                query = "DELETE FROM " + table_name + " WHERE date_id = " + str(id)
+                cur.execute(query)
+                self.conn.commit()
+                cur.close()
+                return f"{cur.rowcount}"
+            return 0
+            
     def clear_fact_churn_measure(self, date_id, churn_type):
         """Clear fact_churn_measure at warehouse"""
 
