@@ -3,13 +3,13 @@ from ..utils.log import LOGGER
 # import psycopg2
 # from psycopg2.extras import DictCursor, execute_values
 # from psycopg2 import sql
-import mysql.connector
+import mariadb
 from .sql_queries import *
 import pandas as pd
 import numpy as np
 
-class MySQLConnector:
-    """Mysql Database class"""
+class MariaDBConnector:
+    """MariaDB Database class"""
 
     
     def __init__(self, host, port, user, password, database):
@@ -24,12 +24,13 @@ class MySQLConnector:
     def connect(self):
         if self.conn is None:
             try:
-                self.conn = mysql.connector.connect(
+                self.conn = mariadb.connect(
                     host=self.host,
                     port=self.port,
                     user=self.user,
                     password=self.password,
-                    database=self.database
+                    database=self.database,
+                    charset="utf8mb3"
                 )
             except Exception as e:
                 LOGGER.error(e)
@@ -43,7 +44,7 @@ class MySQLConnector:
             with self.conn.cursor() as cur:
                 cur.execute(query)
                 records = cur.fetchall()
-        except mysql.connector.Error as e:
+        except mariadb.Error as e:
             LOGGER.error(e)
             raise e
         finally:
@@ -90,7 +91,7 @@ class MySQLConnector:
                 
                 return len(data)
 
-        except mysql.connector.Error as e:
+        except mariadb.Error as e:
             LOGGER.error(e)
             raise e
         finally:
@@ -192,7 +193,7 @@ class MySQLConnector:
                 self.conn.commit()
                 cur.close()
                 return f"{cur.rowcount} rows"
-        except(Exception, mysql.connector.Error) as error:
+        except(Exception, mariadb.Error) as error:
             print(error)
 
     # def load_df_data_from_sql(self, db_clickhouse, sql_query):
@@ -241,7 +242,7 @@ class MySQLConnector:
                 self.conn.commit()
                 cur.close()
                 return f"{cur.rowcount}"
-        except(Exception, mysql.connector.Error) as error:
+        except(Exception, mariadb.Error) as error:
             print(error)
 
     # def clear_fact_snapshot(self, date_id):
