@@ -30,7 +30,7 @@ def call_api(url,data):
         return data_res['data']['totalRechargeAmount'] , data_res['data']['totalValidBetAmount']
     else:
         # data_res["aa"] = data
-        LOGGER.error(data_res['msg'])
+        LOGGER.error(data_res)
         return None,None
     
 def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
