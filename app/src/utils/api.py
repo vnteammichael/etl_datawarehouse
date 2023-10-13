@@ -39,12 +39,22 @@ def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
     recharge_amount = 0
     start = ''.join(start_date.split('-'))
     end = ''.join(end_date.split('-'))
+    # data={
+    # "userName":user_name,
+    # "startTime":start, 
+    # "endTime":end
+    # }
+    sign = create_sign_str(user_name=user_name,start=start,end=end,type=5,key=sign_key)
+    
     data={
-    "userName":user_name,
+    "userName":"cavang151212",
     "startTime":start, 
-    "endTime":end
+    "endTime":end,
+    "gameType":5,
+    "sign":sign
     }
-    test()
+    print(data)
+    call_api(url=url,data=data)
     # for type in range(1,6):
     #     sign = create_sign_str(user_name=user_name,start=start,end=end,type=type,key=sign_key)
     #     data["gameType"] = type
