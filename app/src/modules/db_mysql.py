@@ -520,6 +520,7 @@ class MySQLConnector:
         with self.conn.cursor() as cur:
             cur.execute(query, (department_name,))
             row = cur.fetchone()
+            print(row)
             if row:
                 id = row[0]
             else:
