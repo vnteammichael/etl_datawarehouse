@@ -156,6 +156,7 @@ def run(get_date, db, logs):
     stats_user = df.groupby(['id','user_name','game']).agg({
         "value":"sum"
     }).reset_index()
+    print(stats_user.count())
 
     stats_user.rename(columns={"id": "user_id", "value": "redeem_amount"},inplace=True)
     stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
@@ -170,6 +171,7 @@ def run(get_date, db, logs):
     stats_user = stats_user[["date_id","user_id","game_id","redeem_amount"]]
 
     
+    print(stats_user.count())
 
     if len(stats_user.values)>0:
         dim_user_history_table_insert = "INSERT INTO user_history (date_id, user_id, game_id, redeem_amount) VALUES"
