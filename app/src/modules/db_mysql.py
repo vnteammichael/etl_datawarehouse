@@ -289,7 +289,6 @@ class MySQLConnector:
             row = cur.fetchone()
             if row:
                 game_id = row[0]
-                print(game_id)
 
 
             query = "DELETE FROM user_history WHERE date_id = " + str(date_id) + " AND game_id = " + str(game_id)

@@ -126,7 +126,7 @@ def run(get_date, db, logs):
     if len(stats_user.values)>0:
         # records_data = df.to_records(index=False)
         dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, valid_bet_amount, recharge_amount, times, scores) VALUES"
-        total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
+        total_inserted += db.load_data_bulk(part_query=dim_user_history_table_insert,
                                         format_str='(%s, %s, %s, %s, %s, %s, %s)',
                                         dataframe=stats_user,
                                         on_conflict = "")
@@ -144,7 +144,7 @@ def run(get_date, db, logs):
     """.format(game='lucky_wheel', date=get_date))
 
     try:
-        records = db_8b.select_rows(query)
+        records = db_8d.select_rows(query)
         df = pd.DataFrame(records, columns =['id','user_name','game','value'])
     except Exception as e:
         print(str(e))
@@ -173,7 +173,7 @@ def run(get_date, db, logs):
 
     if len(stats_user.values)>0:
         dim_user_history_table_insert = "INSERT IGNORE INTO user_history (date_id, user_id, game_id, redeem_amount) VALUES"
-        total_inserted = db.load_data_bulk(part_query=dim_user_history_table_insert,
+        total_inserted += db.load_data_bulk(part_query=dim_user_history_table_insert,
                                         format_str='(%s, %s, %s, %s)',
                                         dataframe=stats_user,
                                         on_conflict = "ON DUPLICATE KEY UPDATE redeem_amount=redeem_amount")
