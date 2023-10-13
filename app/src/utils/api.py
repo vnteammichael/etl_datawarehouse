@@ -54,7 +54,7 @@ def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
     "sign":sign
     }
     print(data)
-    call_api(url=url,data=data)
+    test(url=url,data=data)
     # for type in range(1,6):
     #     sign = create_sign_str(user_name=user_name,start=start,end=end,type=type,key=sign_key)
     #     data["gameType"] = type
@@ -69,19 +69,13 @@ def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
     #     recharge_amount = recharge
     return recharge_amount, valid_bet_amount
 
-def test():
+def test(url,data):
     import requests
     import json
 
-    url = "https://api.888b01.com/member/r/userCe"
+    # url = "https://api.888b01.com/member/r/userCe"
 
-    payload = json.dumps({
-    "userName": "cavang151212",
-    "startTime": "20231010",
-    "endTime": "20231010",
-    "gameType": 5,
-    "sign": "58b9a0a03ba9a8fe6c49ec6b582c569f"
-    })
+    payload = json.dumps(data)
     headers = {
     'Content-Type': 'application/json'
     }
