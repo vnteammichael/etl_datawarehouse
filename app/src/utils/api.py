@@ -30,8 +30,7 @@ def call_api(url,data):
         return data_res['data']['totalRechargeAmount'] , data_res['data']['totalValidBetAmount']
     else:
         # data_res["aa"] = data
-        LOGGER.error(data_res)
-        LOGGER.error(data)
+        LOGGER.error(data_res['msg'])
         return None,None
     
 def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
@@ -56,7 +55,7 @@ def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
         recharge = 0 if recharge == None else recharge
 
         valid_bet_amount += valid_bet
-        recharge_amount += recharge
+        recharge_amount = recharge
     return recharge_amount, valid_bet_amount
 
 
