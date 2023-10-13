@@ -20,7 +20,7 @@ def run(start_date, end_date, db):
         get_date = single_date.strftime("%Y-%m-%d")
 
         # DIM update game Luck Wheel
-        db.clear_user_history(get_date,"luck_wheel")
+        db.clear_user_history(get_date,"lucky_wheel")
         logs = lucky_wheel_8b.run(get_date, db, logs)
         logs = lucky_wheel_8d.run(get_date, db, logs)
 

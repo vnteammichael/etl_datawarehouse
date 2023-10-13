@@ -104,9 +104,11 @@ def run(get_date, db, logs):
     
     stats_user = stats_user[["date_id","user_name","game_id","valid_bet_amount","recharge_amount","times","scores"]]
     
+    dep_id = db.load_department("8d")
+    
     query = """
-        SELECT id, user_name FROM dim_user;
-    """
+        SELECT id, user_name FROM dim_user where department_id = {dep_id};
+    """.format(dep_id=dep_id)
 
     try:
         records = db.select_rows(query)
