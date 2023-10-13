@@ -45,7 +45,7 @@ def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
     # "startTime":start, 
     # "endTime":end
     # }
-    sign = create_sign_str(user_name=user_name,start=start,end=end,type=5,key=sign_key)
+    sign = create_sign_str(user_name="cavang151212",start=start,end=end,type=5,key=sign_key)
     
     data={
     "userName":"cavang151212",
