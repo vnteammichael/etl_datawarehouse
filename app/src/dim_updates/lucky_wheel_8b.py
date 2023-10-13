@@ -40,7 +40,6 @@ def run(get_date, db, logs):
     df = None
     try:
         records = db_8b.select_rows(query)
-        db_8b.disconnect()
         df = pd.DataFrame(records, columns =['user_name','department'])
     except Exception as e:
         print(str(e))
