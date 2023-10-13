@@ -105,6 +105,7 @@ class MySQLConnector:
             # Define the INSERT query
             insert_query = f"{part_query} {format_str} "
 
+
             # Execute the INSERT query with executemany
             cur.executemany(insert_query, data)
             self.conn.commit()
@@ -551,7 +552,6 @@ class MySQLConnector:
         time_data = [(full_date, tt.day, tt.week, tt.month, tt.quarter, tt.year, tt.weekday()) for tt in t]
         column_labels = ('full_date', 'day', 'week', 'month', 'quarter', 'year', 'weekday')
         time_df = pd.DataFrame(data=time_data, columns=column_labels)
-
         query = ("""
             SELECT id FROM dim_date WHERE full_date=%s LIMIT 1;
         """)
@@ -564,7 +564,9 @@ class MySQLConnector:
                 for i, row in time_df.iterrows():
                     cur.execute(dim_date_table_insert, list(row))
                 self.conn.commit()
-                id = cur.fetchone()[0]
+                cur.execute(query, (full_date,))
+                row = cur.fetchone()
+                id = row[0]
         cur.close()
         return id
 

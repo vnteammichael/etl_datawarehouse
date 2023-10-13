@@ -4,11 +4,11 @@ INSERT INTO dim_group (group_name) VALUES (%s) RETURNING id;
 """)
 
 dim_department_table_insert = ("""
-INSERT INTO dim_department (department) VALUES (%s);
+INSERT IGNORE INTO dim_department (department) VALUES (%s);
 """)
 
 dim_game_table_insert = ("""
-INSERT INTO dim_game (game) VALUES (%s);
+INSERT IGNORE INTO dim_game (game) VALUES (%s);
 """)
 
 dim_utm_source_table_insert = ("""
@@ -46,9 +46,6 @@ RETURNING id;
 """)
 
 dim_date_table_insert = ("""
-INSERT INTO dim_date (full_date, day, week, month, quarter, year, weekday)
-VALUES (%s, %s, %s, %s, %s, %s, %s)
-ON CONFLICT (full_date)
-DO NOTHING
-RETURNING id;
+INSERT IGNORE INTO dim_date (full_date, day, week, month, quarter, year, weekday)
+VALUES (%s, %s, %s, %s, %s, %s, %s);
 """)
