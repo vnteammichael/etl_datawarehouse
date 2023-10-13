@@ -23,7 +23,7 @@ def call_api(url,data):
     'Content-Type': 'application/json'
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.post(url, headers=headers, data=payload)
 
     data_res = response.json()
     if data_res['code'] == 0:
