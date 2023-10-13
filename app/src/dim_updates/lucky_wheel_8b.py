@@ -30,6 +30,8 @@ def run(get_date, db, logs):
 
     #### 1 - Query data ####
     
+    print(db.charset)
+    
     db_8b = MySQLConnector(host=LUCKY_WHEEL_8B_HOST, user=LUCKY_WHEEL_8B_USERNAME, password=LUCKY_WHEEL_8B_PASSWORD, port=LUCKY_WHEEL_8B_PORT, database=LUCKY_WHEEL_8B_NAME, charset="utf8")
     query = ("""
 
@@ -40,7 +42,6 @@ def run(get_date, db, logs):
     df = None
     try:
         records = db_8b.select_rows(query)
-        print(records)
         df = pd.DataFrame(records, columns =['user_name','department'])
     except Exception as e:
         print(str(e))
@@ -48,6 +49,8 @@ def run(get_date, db, logs):
     if len(df)==0:
         return logs
 
+    print(db_8b.charset)
+    print(db.charset)
     
     df["department_id"] = df['department'].apply(lambda x : db.load_department(x)) 
     df = df[["user_name","department_id"]]
