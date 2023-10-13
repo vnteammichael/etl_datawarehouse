@@ -30,8 +30,6 @@ def run(get_date, db, logs):
 
     #### 1 - Query data ####
     
-    print(db.charset)
-    
     db_8b = MySQLConnector(host=LUCKY_WHEEL_8B_HOST, user=LUCKY_WHEEL_8B_USERNAME, password=LUCKY_WHEEL_8B_PASSWORD, port=LUCKY_WHEEL_8B_PORT, database=LUCKY_WHEEL_8B_NAME, charset="utf8")
     query = ("""
 
@@ -49,8 +47,7 @@ def run(get_date, db, logs):
     if len(df)==0:
         return logs
 
-    print(db_8b.charset)
-    print(db.charset)
+    df = df.applymap(lambda x: x.encode('utf-8').decode('utf-8'))
     
     df["department_id"] = df['department'].apply(lambda x : db.load_department(x)) 
     df = df[["user_name","department_id"]]
