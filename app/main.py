@@ -36,11 +36,11 @@ from config import (
 from src import init_script
 
 from src.modules.db_clickhouse import DatabaseClickHouse
-from src.modules.db_mysql import MySQLConnector
+from src.modules.db_mariadb import MariaDBConnector
 # Create database class
 # db_clickhouse = DatabaseClickHouse(CLICKHOUSE_HOST, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD, CLICKHOUSE_PORT, CLICKHOUSE_NAME)
 # print(type(MYSQL_HOST), type(MYSQL_USERNAME), type(MYSQL_PASSWORD), type(MYSQL_PORT), type(MYSQL_NAME))
-db = MySQLConnector(host=MYSQL_HOST, user=MYSQL_USERNAME, password=MYSQL_PASSWORD, port=MYSQL_PORT, database=MYSQL_NAME)
+db = MariaDBConnector(host=MYSQL_HOST, user=MYSQL_USERNAME, password=MYSQL_PASSWORD, port=MYSQL_PORT, database=MYSQL_NAME)
 
 if runner == None:
     runner = "daily"

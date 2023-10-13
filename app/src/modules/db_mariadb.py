@@ -3,7 +3,7 @@ from ..utils.log import LOGGER
 # import psycopg2
 # from psycopg2.extras import DictCursor, execute_values
 # from psycopg2 import sql
-import mariadb
+import mysql.connector
 from .sql_queries import *
 import pandas as pd
 import numpy as np
@@ -24,7 +24,7 @@ class MariaDBConnector:
     def connect(self):
         if self.conn is None:
             try:
-                self.conn = mariadb.connect(
+                self.conn = mysql.connector.connect(
                     host=self.host,
                     port=self.port,
                     user=self.user,
@@ -44,7 +44,7 @@ class MariaDBConnector:
             with self.conn.cursor() as cur:
                 cur.execute(query)
                 records = cur.fetchall()
-        except mariadb.Error as e:
+        except mysql.connector.Error as e:
             LOGGER.error(e)
             raise e
         finally:
@@ -91,7 +91,7 @@ class MariaDBConnector:
                 
                 return len(data)
 
-        except mariadb.Error as e:
+        except mysql.connector.Error as e:
             LOGGER.error(e)
             raise e
         finally:
@@ -193,7 +193,7 @@ class MariaDBConnector:
                 self.conn.commit()
                 cur.close()
                 return f"{cur.rowcount} rows"
-        except(Exception, mariadb.Error) as error:
+        except(Exception, mysql.connector.Error) as error:
             print(error)
 
     # def load_df_data_from_sql(self, db_clickhouse, sql_query):
@@ -242,7 +242,7 @@ class MariaDBConnector:
                 self.conn.commit()
                 cur.close()
                 return f"{cur.rowcount}"
-        except(Exception, mariadb.Error) as error:
+        except(Exception, mysql.connector.Error) as error:
             print(error)
 
     # def clear_fact_snapshot(self, date_id):
