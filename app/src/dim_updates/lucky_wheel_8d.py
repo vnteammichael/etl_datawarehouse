@@ -90,6 +90,9 @@ def run(get_date, db, logs):
         "times":"count"
     }).reset_index()
 
+    print(df.count())
+    print(stats_user.count())
+
     stats_user.rename(columns={"id": "user_id", "value": "scores"},inplace=True)
     stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
     
@@ -117,7 +120,8 @@ def run(get_date, db, logs):
     
     stats_user.rename(columns={"id": "user_id"},inplace=True)
     stats_user = stats_user[["date_id","user_id","game_id","valid_bet_amount","recharge_amount","times","scores"]]
-
+    print(dim_user.count())
+    print(stats_user.count())
 
     if len(stats_user.values)>0:
         # records_data = df.to_records(index=False)
