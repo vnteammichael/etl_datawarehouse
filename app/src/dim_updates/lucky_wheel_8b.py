@@ -30,7 +30,7 @@ def run(get_date, db, logs):
 
     #### 1 - Query data ####
     
-    db_8b = MySQLConnector(host=LUCKY_WHEEL_8B_HOST, user=LUCKY_WHEEL_8B_USERNAME, password=LUCKY_WHEEL_8B_PASSWORD, port=LUCKY_WHEEL_8B_PORT, database=LUCKY_WHEEL_8B_NAME)
+    db_8b = MySQLConnector(host=LUCKY_WHEEL_8B_HOST, user=LUCKY_WHEEL_8B_USERNAME, password=LUCKY_WHEEL_8B_PASSWORD, port=LUCKY_WHEEL_8B_PORT, database=LUCKY_WHEEL_8B_NAME, charset="utf8")
     query = ("""
 
         SELECT username, '{department}' AS department FROM {table} WHERE date(updatedAt) = '{date}';
