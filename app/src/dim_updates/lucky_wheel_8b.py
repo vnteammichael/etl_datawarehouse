@@ -89,8 +89,8 @@ def run(get_date, db, logs):
         "value":"sum",
         "times":"count"
     }).reset_index()
-    print(df['user_id'].count())
-    print(stats_user['user_id'].count())
+    print(df.count())
+    print(stats_user.count())
 
     # stats_user.rename(columns={"id": "user_id", "value": "scores"},inplace=True)
     # stats_user['game_id'] = stats_user['game'].apply(lambda x: db.load_game(x))
