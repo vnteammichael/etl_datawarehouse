@@ -34,6 +34,10 @@ class MySQLConnector:
             except Exception as e:
                 LOGGER.error(e)
                 raise e
+    
+    def disconnect(self):
+        if self.conn is not None:
+            self.conn.close()
 
     def select_rows(self, query):
         records = []
