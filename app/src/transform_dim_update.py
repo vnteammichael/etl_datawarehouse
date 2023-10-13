@@ -21,7 +21,7 @@ def run(start_date, end_date, db):
 
         # DIM update game Luck Wheel
         logs = lucky_wheel_8b.run(get_date, db, logs)
-        # logs = lucky_wheel_8d.run(get_date, db, logs)
+        logs = lucky_wheel_8d.run(get_date, db, logs)
 
         # Update log transform
         db.load_logs_transform(logs)
