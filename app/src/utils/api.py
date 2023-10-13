@@ -18,7 +18,6 @@ def create_sign_str(user_name,start,end,type,key):
     return res.hexdigest()
 
 def call_api(url,data):
-    # url = "https://release.888b.com/member/r/userCe"
     payload = json.dumps(data)
     headers = {
     'Content-Type': 'application/json'
