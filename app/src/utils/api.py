@@ -39,53 +39,22 @@ def get_valid_bet_amount(user_name,start_date,end_date,url,sign_key):
     recharge_amount = 0
     start = ''.join(start_date.split('-'))
     end = ''.join(end_date.split('-'))
-    # data={
-    # "userName":user_name,
-    # "startTime":start, 
-    # "endTime":end
-    # }
-    sign = create_sign_str(user_name="cavang151212",start=start,end=end,type=5,key=sign_key)
-    
     data={
-    "userName":"cavang151212",
+    "userName":user_name,
     "startTime":start, 
-    "endTime":end,
-    "gameType":5,
-    "sign":sign
+    "endTime":end
     }
-    print(data)
-    test(url=url,data=data)
-    # for type in range(1,6):
-    #     sign = create_sign_str(user_name=user_name,start=start,end=end,type=type,key=sign_key)
-    #     data["gameType"] = type
-    #     data["sign"] = sign
+    for type in range(1,6):
+        sign = create_sign_str(user_name=user_name,start=start,end=end,type=type,key=sign_key)
+        data["gameType"] = type
+        data["sign"] = sign
 
-    #     recharge, valid_bet  = call_api(url=url,data=data)
+        recharge, valid_bet  = call_api(url=url,data=data)
 
-    #     valid_bet = 0 if valid_bet == None else valid_bet
-    #     recharge = 0 if recharge == None else recharge
+        valid_bet = 0 if valid_bet == None else valid_bet
+        recharge = 0 if recharge == None else recharge
 
-    #     valid_bet_amount += valid_bet
-    #     recharge_amount = recharge
+        valid_bet_amount += valid_bet
+        recharge_amount = recharge
     return recharge_amount, valid_bet_amount
-
-def test(url,data):
-    import requests
-    import json
-
-    url = "https://api.888b01.com/member/r/userCe"
-
-    payload = json.dumps(data)
-    print(payload)
-    headers = {
-    'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    print(response.text)
-
-
-
-    
 
