@@ -40,6 +40,7 @@ def run(get_date, db, logs):
     df = None
     try:
         records = db_8b.select_rows(query)
+        print(records)
         df = pd.DataFrame(records, columns =['user_name','department'])
     except Exception as e:
         print(str(e))
@@ -70,7 +71,7 @@ def run(get_date, db, logs):
                                     where date(createdAt)  = '{date}' and isDeleted = 0 and typeName = 'received')
                 SELECT id, username, '{game}' AS game, money
                 FROM history_daily
-                        INNER JOIN users ON users.id = history_daily.userId LIMIT 5;
+                        INNER JOIN users ON users.id = history_daily.userId;
 
 
     """.format(game='lucky_wheel', date=get_date))
