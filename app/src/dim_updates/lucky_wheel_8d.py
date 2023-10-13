@@ -145,7 +145,8 @@ def run(get_date, db, logs):
     stats_user_redeem.rename(columns={"value":"redeem_amount"})
 
     stats_user = stats_user.merge(dim_user,how="inner",on="user_name")
-    stats_user = stats_user.merge(stats_user_redeem,how="left",on="user_name")
+    stats_user = stats_user.merge(stats_user_redeem,how="inner",on="user_name")
+    print(stats_user)
     
     stats_user.rename(columns={"id": "user_id"},inplace=True)
     stats_user = stats_user[["date_id","user_id","game_id","valid_bet_amount","recharge_amount","redeem_amount","times","scores"]]
