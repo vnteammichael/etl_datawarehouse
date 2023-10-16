@@ -137,33 +137,17 @@ class MySQLConnector:
     #     + dimension_2 (string)
     #     + dimension_3 (string)
     # Columns of values and contexts that are not used must also be include in result (can return NULL or empty string)
-    def load_fact_snapshot(self, db_clickhouse, action, sql_query = "", df = None):
+    def load_fact_snapshot(self, df = None):
 
-        if sql_query != "":
-            df = self.load_df_data_from_sql(db_clickhouse, sql_query)
 
         if df is None:
             print('Missing DataFrame')
             exit(1)
 
-        try:
-            metric_name = action.get("name", "")
-            if metric_name == "":
-                raise Exception("Missing action name")
-            metric_description = action.get("description", "")
-            if metric_description == "":
-                raise Exception("Missing action description")
-
-            metric_id = self.load_action(action)
-        except Exception as e:
-            LOGGER.warning("Passing Action/Metric variables must include it's description. (i.e pass a dictionary with \{'name': name; 'description': description\} format)")
-            LOGGER.error(str(e))
-            exit(1)
-
 
         fact_snapshot = []
         for _, row in df.iterrows():
-            game_id = dimension_1_id = dimension_2_id = dimension_3_id = None
+            date_id = game_id = department_id = dimension_1 = dimension_2 = dimension_3 = ""
 
             if 'metric_value_2' not in row:
                 row['metric_value_2'] = 0
@@ -172,20 +156,20 @@ class MySQLConnector:
                 date_id = self.load_date(row['full_date'])
                 department_id = self.load_department(row['department'])
                 game_id = self.load_game(row['game'])
-                dimension_1_id = self.load_context(row['dimension_1'], 1)
-                dimension_2_id = self.load_context(row['dimension_2'], 2)
-                dimension_3_id = self.load_context(row['dimension_3'], 3)
+                dimension_1 = row['dimension_1']
+                dimension_2 = row['dimension_2']
+                dimension_3 = row['dimension_3']
             except KeyError:
                 pass
             except Exception as e:
                 LOGGER.error(str(e))
                 exit(1)
 
-            row_added = [date_id, game_id, department_id, metric_id, dimension_1_id, dimension_2_id, dimension_3_id, row['metric_value'], row['metric_value_2']]
+            row_added = [date_id, game_id, department_id, row['metric'], dimension_1, dimension_2, dimension_3, row['metric_value'], row['metric_value_2']]
 
             fact_snapshot.append(tuple(row_added))
 
-        query = 'INSERT INTO fact_snapshot (date_id, game_id, department_id, metric_id, dimension_1_id, dimension_2_id, dimension_3_id, metric_value, metric_value_2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        query = 'INSERT INTO fact_snapshot (date_id, game_id, department_id, metric, dimension_1, dimension_2, dimension_3, metric_value, metric_value_2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
         self.connect()
         try:
             with self.conn.cursor() as cur:
@@ -196,17 +180,6 @@ class MySQLConnector:
         except(Exception, mysql.connector.Error) as error:
             print(error)
 
-    # def load_df_data_from_sql(self, db_clickhouse, sql_query):
-    #     format_query = self.adjust_query_to_format(sql_query)
-    #     df = None
-    #     try:
-    #         records = db_clickhouse.select_rows(format_query)
-    #         df = pd.DataFrame(records, columns =['full_date', 'market_id', 'social_id', 'metric_value', 'dimension_1','dimension_2','dimension_3'])
-    #     except Exception as e:
-    #         LOGGER.warning("The query must return data with correct format (full_date, market_id, platform_id, social_id, metric_value, ..., dimension_3")
-    #         LOGGER.error(str(e))
-
-    #     return df
 
 
     def load_logs_transform(self, logs):
@@ -245,7 +218,7 @@ class MySQLConnector:
         except(Exception, mysql.connector.Error) as error:
             print(error)
 
-    def clear_fact_daily(self, date, table_name):
+    def clear_fact_daily(self, date, table_name, metric = ""):
         """Clear fact_daily_measure at warehouse"""
         
         self.connect()
@@ -258,7 +231,7 @@ class MySQLConnector:
             row = cur.fetchone()
             if row:
                 id = row[0]
-                query = "DELETE FROM " + table_name + " WHERE date_id = " + str(id)
+                query = "DELETE FROM " + table_name + " WHERE date_id = " + str(id) + " AND metric = '" + str(metric)+"'"
                 cur.execute(query)
                 self.conn.commit()
                 cur.close()

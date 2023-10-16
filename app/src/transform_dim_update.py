@@ -21,6 +21,7 @@ def run(start_date, end_date, db):
 
         # DIM update game Luck Wheel
         db.clear_user_history(get_date,"lucky_wheel")
+        db.clear_fact_daily(get_date,"fact_snapshot","a1_fact_awards_stat")
         logs = lucky_wheel_8b.run(get_date, db, logs)
         logs = lucky_wheel_8d.run(get_date, db, logs)
 

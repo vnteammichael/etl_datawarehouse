@@ -131,15 +131,15 @@ def run(get_date, db, logs):
 
     try:
         records = db_8b.select_rows(query)
-        df = pd.DataFrame(records, columns =['user_name','game','value'])
+        df_redeem = pd.DataFrame(records, columns =['user_name','game','value'])
     except Exception as e:
         print(str(e))
     # Stop this task
-    if len(df)==0:
+    if len(df_redeem)==0:
         return logs
     
-    df["times"] = df['user_name'].apply(lambda x:x)
-    stats_user_redeem = df.groupby(['user_name']).agg({
+
+    stats_user_redeem = df_redeem.groupby(['user_name']).agg({
         "value":"sum"
     }).reset_index()
     stats_user_redeem.rename(columns={"value":"redeem_amount"},inplace=True)
@@ -159,6 +159,26 @@ def run(get_date, db, logs):
                                         dataframe=stats_user,
                                         on_conflict = "")
         
+    #calculate fact snashot
+
+    fact_awards_stat = df.groupby(["value"]).agg({
+        "id":"count"
+    }).reset_index()
+    fact_awards_stat.rename(columns={"id":"metric_value","value":"dimension_1"},inplace=True)
+    total_times = df['id'].count()
+    fact_awards_stat["metric_value_2"] = total_times
+    fact_awards_stat["full_date"] = get_date
+    fact_awards_stat["game"] = "lucky_wheel"
+    fact_awards_stat["department"] = "8b"
+    fact_awards_stat["metric"] = "a1_fact_awards_stat"
+
+    fact_awards_stat = fact_awards_stat[["full_date","game","department","metric","metric_value","metric_value_2","dimension_1"]]
+
+    if len(fact_awards_stat.values)>0:
+        # records_data = df.to_records(index=False)
+        db.load_fact_snapshot(df = fact_awards_stat)
+
+    
  
     # Show info logs
     spend_time = currentMillisecondsTime() - startTime
