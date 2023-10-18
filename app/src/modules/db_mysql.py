@@ -192,13 +192,13 @@ class MySQLConnector:
         if len(logs["actions"])==0:
             return
 
-        # Clear logs
-        query = "DELETE FROM log_transform_daily";
-        self.connect()
-        with self.conn.cursor() as cur:
-            cur.execute(query)
-            self.conn.commit()
-            cur.close()
+        # # Clear logs
+        # query = "DELETE FROM log_transform_daily";
+        # self.connect()
+        # with self.conn.cursor() as cur:
+        #     cur.execute(query)
+        #     self.conn.commit()
+        #     cur.close()
 
         record_data = []
         i = 0;
