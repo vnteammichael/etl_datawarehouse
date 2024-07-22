@@ -147,15 +147,17 @@ class MySQLConnector:
 
         fact_snapshot = []
         for _, row in df.iterrows():
-            date_id = game_id = department_id = dimension_1 = dimension_2 = dimension_3 = ""
+            date_id = department_id = dimension_1 = dimension_2 = dimension_3 = ""
 
             if 'metric_value_2' not in row:
                 row['metric_value_2'] = 0
 
             try:
                 date_id = self.load_date(row['full_date'])
-                department_id = self.load_department(row['department'])
-                game_id = self.load_game(row['game'])
+                if 'department_id' in row:
+                    department_id = row['department_id']
+                else:
+                    department_id = self.load_department(row['department'])
                 dimension_1 = row['dimension_1']
                 dimension_2 = row['dimension_2']
                 dimension_3 = row['dimension_3']
@@ -165,11 +167,11 @@ class MySQLConnector:
                 LOGGER.error(str(e))
                 exit(1)
 
-            row_added = [date_id, game_id, department_id, row['metric'], dimension_1, dimension_2, dimension_3, row['metric_value'], row['metric_value_2']]
+            row_added = [date_id, department_id, row['metric'], dimension_1, dimension_2, dimension_3, row['metric_value'], row['metric_value_2']]
 
             fact_snapshot.append(tuple(row_added))
 
-        query = 'INSERT INTO fact_snapshot (date_id, game_id, department_id, metric, dimension_1, dimension_2, dimension_3, metric_value, metric_value_2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        query = 'INSERT INTO fact_snapshot (date_id, department_id, metric, dimension_1, dimension_2, dimension_3, metric_value, metric_value_2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
         self.connect()
         try:
             with self.conn.cursor() as cur:
@@ -218,24 +220,22 @@ class MySQLConnector:
         except(Exception, mysql.connector.Error) as error:
             print(error)
 
-    def clear_fact_daily(self, date, table_name, metric = ""):
+    def clear_fact_daily(self, date_id, table_name, metric = ""):
         """Clear fact_daily_measure at warehouse"""
         
         self.connect()
         
-        query_get_date_id = ("""
-            SELECT id FROM dim_date WHERE full_date=%s LIMIT 1;
-        """)
+        # query_get_date_id = ("""
+        #     SELECT id FROM dim_date WHERE full_date=%s LIMIT 1;
+        # """)
         with self.conn.cursor() as cur:
-            cur.execute(query_get_date_id, (date,))
-            row = cur.fetchone()
-            if row:
-                id = row[0]
-                query = "DELETE FROM " + table_name + " WHERE date_id = " + str(id) + " AND metric = '" + str(metric)+"'"
-                cur.execute(query)
-                self.conn.commit()
-                cur.close()
-                return f"{cur.rowcount}"
+            query = "DELETE FROM " + table_name + " WHERE date_id = " + str(date_id)
+            if metric != "":
+                query += " AND metric = '" + str(metric)+"'"
+            cur.execute(query)
+            self.conn.commit()
+            cur.close()
+            return f"{cur.rowcount}"
             return 0
         
     def clear_user_history(self, date, game):

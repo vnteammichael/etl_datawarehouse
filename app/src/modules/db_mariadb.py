@@ -163,15 +163,23 @@ class MariaDBConnector:
 
         fact_snapshot = []
         for _, row in df.iterrows():
-            game_id = dimension_1_id = dimension_2_id = dimension_3_id = None
+            department_id = game_id = dimension_1_id = dimension_2_id = dimension_3_id = None
 
             if 'metric_value_2' not in row:
                 row['metric_value_2'] = 0
+            
 
             try:
-                date_id = self.load_date(row['full_date'])
-                department_id = self.load_department(row['department'])
-                game_id = self.load_game(row['game'])
+                date_id = self.load_date(row['date'])
+                
+                if 'game_id' in row:
+                    game_id = row['game_id']
+                else:
+                    game_id = self.load_game(row['game'])
+                if 'department_id' in row:
+                    department_id = row['department_id']
+                else:
+                    department_id = self.load_department(row['department'])
                 dimension_1_id = self.load_context(row['dimension_1'], 1)
                 dimension_2_id = self.load_context(row['dimension_2'], 2)
                 dimension_3_id = self.load_context(row['dimension_3'], 3)

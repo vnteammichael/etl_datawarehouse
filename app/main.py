@@ -31,7 +31,9 @@ load_dotenv(args.FILENAME)
 # config = read_config_from_file()
 
 from config import (
-    MYSQL_HOST, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_PORT, MYSQL_NAME
+    MYSQL_HOST, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_PORT, MYSQL_NAME,
+    MYSQL_XSN_HOST, MYSQL_XSN_USERNAME, MYSQL_XSN_PASSWORD, MYSQL_XSN_PORT, MYSQL_XSN_NAME
+
 )
 from src import init_script
 
@@ -41,6 +43,8 @@ from src.modules.db_mysql import MySQLConnector
 # db_clickhouse = DatabaseClickHouse(CLICKHOUSE_HOST, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD, CLICKHOUSE_PORT, CLICKHOUSE_NAME)
 # print(type(MYSQL_HOST), type(MYSQL_USERNAME), type(MYSQL_PASSWORD), type(MYSQL_PORT), type(MYSQL_NAME))
 db = MySQLConnector(host=MYSQL_HOST, user=MYSQL_USERNAME, password=MYSQL_PASSWORD, port=MYSQL_PORT, database=MYSQL_NAME)
+db_xsn = MySQLConnector(host=MYSQL_XSN_HOST, user=MYSQL_XSN_USERNAME, password=MYSQL_XSN_PASSWORD, port=MYSQL_XSN_PORT, database=MYSQL_XSN_NAME)
+    
 
 if runner == None:
     runner = "daily"
@@ -51,4 +55,4 @@ if start_date and end_date == None:
     end_date = start_date
 
 if __name__ == "__main__":
-    init_script(runner, start_date, end_date, db)
+    init_script(runner, start_date, end_date, db_xsn, db)
