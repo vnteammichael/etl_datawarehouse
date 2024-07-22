@@ -2,7 +2,7 @@
 from ..utils.log import LOGGER
 # import psycopg2
 # from psycopg2.extras import DictCursor, execute_values
-# from psycopg2 import sql
+# ""
 import mysql.connector
 from .sql_queries import *
 import pandas as pd
@@ -77,10 +77,11 @@ class MySQLConnector:
 
             with self.conn.cursor() as cur:
                 # Create a placeholder for the INSERT statement
-                placeholders = ', '.join(['(%s, %s, %s)' for _ in range(len(data[0]))])
+                # v = '( ' + ', '.join(['%s' for _ in range(len(data[0]))]) + ' )'
+                placeholders =  '( ' + ', '.join(['%s'  for _ in range(len(data[0]))]) + ' )'
                 # Construct the INSERT statement with placeholders
                 query = f"{queryText} VALUES {placeholders}"
-
+                
                 # Split the data into batches
                 for i in range(0, len(data), batch_size):
                     batch = data[i:i + batch_size]
@@ -638,7 +639,7 @@ class MySQLConnector:
         if dim_table is None:
             return None
 
-        list_dim = df.groupby([column_name]).median().index.get_level_values(0).astype(str).tolist()
+        list_dim = df[column_name].tolist()
 
         self.connect()
         query = f"""
