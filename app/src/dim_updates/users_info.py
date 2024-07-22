@@ -76,6 +76,7 @@ def run(get_date, db_xsn, db, logs):
 
     """.format( date=get_date))
 
+
     df = None
     
     try:

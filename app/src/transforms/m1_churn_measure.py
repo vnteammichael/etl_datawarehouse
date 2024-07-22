@@ -33,11 +33,10 @@ def run(get_date, db_xsn, db, logs):
     frames = [df_churn_1, df_churn_3, df_churn_7,df_churn_15]
     df = pd.concat(frames)
     
-    print(df.head())
 
     # Fix data
     df.fillna(0, inplace=True)
-
+    print(df.head())
     df = db.load_dim("department", "department_id", "department", "dim_department", df)
     
     # Stop this task
@@ -94,6 +93,7 @@ def cal_churn(get_date, churnDay, db_xsn, db):
         JOIN LastUserAction dl ON u.id = dl.userId
         GROUP BY department
     """.format(get_date=get_date,churnDay=churnDay)
+
 
     records = db_xsn.select_rows(query)
     

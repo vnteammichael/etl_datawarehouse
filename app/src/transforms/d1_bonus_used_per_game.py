@@ -51,7 +51,7 @@ def run(get_date, db_xsn, db, logs):
 
     """.format( date=get_date))
 
-    records = db.select_rows(query)
+    records = db_xsn.select_rows(query)
     dailyLogsDf = pd.DataFrame(records, columns =['department','dimension_1','revenue','win','full_date'])
 
     dailyLogsDf["bonus"] = dailyLogsDf['win'] - dailyLogsDf['revenue']
