@@ -1,6 +1,5 @@
 import os
 from src.utils.main import display_results, currentMillisecondsTime
-from psycopg2 import sql
 import pandas as pd
 import numpy as np
 from src.segments.general import level_list, gold_list

@@ -37,7 +37,6 @@ from config import (
 )
 from src import init_script
 
-from src.modules.db_clickhouse import DatabaseClickHouse
 from src.modules.db_mysql import MySQLConnector
 # Create database class
 # db_clickhouse = DatabaseClickHouse(CLICKHOUSE_HOST, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD, CLICKHOUSE_PORT, CLICKHOUSE_NAME)

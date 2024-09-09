@@ -1,7 +1,6 @@
 import os
 from src.utils.main import display_results, currentMillisecondsTime
 from src.modules.log_table_schema import log_table_name
-from psycopg2 import sql
 import datetime
 
 import pandas as pd
@@ -36,7 +35,7 @@ def run(get_date, db_xsn, db, logs):
 
     # Fix data
     df.fillna(0, inplace=True)
-    print(df.head())
+    
     df = db.load_dim("department", "department_id", "department", "dim_department", df)
     
     # Stop this task
@@ -46,8 +45,8 @@ def run(get_date, db_xsn, db, logs):
     # Define fields of fact table
     fact_df = df[['date_id','department_id','churn_type','churn_users','total_daily_active_users']]
     fact_data_list = fact_df.values.tolist()
-
-    queryText = "INSERT INTO fact_churn_measure (date_id, department_id, churn_type, churn_users, total_daily_active_users) VALUES %s"
+    
+    queryText = "INSERT INTO fact_churn_measure (date_id, department_id, churn_type, churn_users, total_daily_active_users) "
     total_inserted = db.load_data_batch(queryText, fact_data_list,'fact_churn_measure')
 
     # Show info logs
@@ -99,7 +98,7 @@ def cal_churn(get_date, churnDay, db_xsn, db):
     
     df1 = pd.DataFrame(records, columns =['department', 'churn_users'])
     
-    churn_date_obj = datetime.datetime.strptime(get_date, '%Y-%m-%d') - datetime.timedelta(days=churnDay+1)
+    churn_date_obj = datetime.datetime.strptime(get_date, '%Y-%m-%d') - datetime.timedelta(days=churnDay)
 
     df2 = cal_daily_active_users(churn_date_obj.strftime("%Y-%m-%d"), db_xsn, db)
     # Merge dataframes
